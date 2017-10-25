@@ -4,8 +4,11 @@
   "description": "AWS Lambda function to create an image thumbnail",
   "main": "index.js",
   "dependencies": {
+    "async": "^0.9.0",
     "gm": "^1.17.0",
-    "async": "^0.9.0"
+    "grunt-cli": "^1.2.0",
+    "imagemagick": "^0.1.3",
+    "node-lambda": "^0.11.4"
   },
   "devDependencies": {
     "aws-sdk": "latest",
