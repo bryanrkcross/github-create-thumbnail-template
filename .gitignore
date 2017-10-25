@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+node_modules
+.idea
+.lambda
+.env
+context.json
+deploy.env
+event_sources.json
