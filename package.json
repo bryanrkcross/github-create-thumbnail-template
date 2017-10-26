@@ -1,5 +1,5 @@
 {
-  "name": "create-thumbs-lambda",
+  "name": "github-create-thumbnail",
   "version": "0.0.1",
   "description": "AWS Lambda function to create an image thumbnail",
   "main": "index.js",
