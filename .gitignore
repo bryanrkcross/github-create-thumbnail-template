@@ -6,4 +6,3 @@ node_modules
 context.json
 deploy.env
 event_sources.json
-build
