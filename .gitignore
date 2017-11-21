@@ -1,8 +1,8 @@
-# Created by .ignore support plugin (hsz.mobi)
-node_modules
 .idea
-.lambda
+node_modules
 .env
-context.json
-deploy.env
-event_sources.json
+dist
+*.orig
+lambda/.lambda
+NewSamTemplate.*
+
