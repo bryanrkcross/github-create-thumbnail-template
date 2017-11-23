@@ -1,0 +1,87 @@
+#It's a comment!
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: PublicRead
+      BucketName: github-lambda-demo-pix
+
+  ImageBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref ImageBucket
+        PolicyDocument:
+          Statement:
+            - Action: s3:GetObject
+              Effect: Allow
+              Principal: "*"
+              Resource: !Sub arn:aws:s3:::github-lambda-demo-pix/*
+
+  ResizedBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: PublicRead
+      BucketName: github-lambda-demo-pix-resized
+
+  ResizeBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ResizedBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:PutObject
+            Effect: Allow
+            Principal: "*"
+            Resource: !Sub arn:aws:s3:::github-lambda-demo-pix-resized/*
+
+  ResizeFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+          #CodeUri: ./dist/github-lambda-demo_latest.zip
+          #CodeUri: s3://github-lambda-demo/github-lambda-demo_latest.zip
+          CodeUri: ./
+          Handler: index.handler
+          Runtime: nodejs6.10
+          MemorySize: 1024
+          Timeout: 300
+          FunctionName: CreateThumbnail
+          Role: arn:aws:iam::377117578606:role/github_lambda_execute
+          Environment:
+                  Variables:
+                    BUCKET: Bucket
+                    URL: Url
+
+  PixBucketLambdaPerm:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ResizeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::Join:
+        - ":"
+        - - arn
+          - aws
+          - s3
+          - ''
+          - ''
+          - github-lambda-demo-pix
+
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: github-lambda-demo-pix
+      Tags: []
+      NotificationConfiguration:
+        LambdaConfigurations:
+        - Event: s3:ObjectCreated:*
+          Function:
+            Fn::GetAtt:
+            - ResizeFunction
+            - Arn
