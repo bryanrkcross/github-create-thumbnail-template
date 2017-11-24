@@ -3,7 +3,6 @@ phases:
   install:
     commands:
       - npm install
-      - aws iam get-user
       - aws cloudformation package --template-file template.yml --s3-bucket github-demo-build --output-template-file NewSamTemplate.yaml
 artifacts:
   type: zip
